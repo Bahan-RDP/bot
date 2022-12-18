@@ -197,18 +197,11 @@ var ppuser = await ronzz.profilePictureUrl(num, 'image')
 } catch {
 var ppuser = 'https://telegra.ph/file/265c672094dfa87caea19.jpg'
 }
-var stream = await getBuffer(ppuser) 
-let buffer = Buffer.from([])
-buffer = Buffer.concat([buffer, stream])
-fs.writeFileSync('./options/sticker/welcome.jpg', buffer)
-let ppnya = await TelegraPh('./options/sticker/welcome.jpg')
-let namenya = await ronzz.getName(num.split('@')[0]+"@s.whatsapp.net")
-let welcomenya = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${namenya}&text2=Welcome+To+${metadata.subject}&text3=Member+${metadata.participants.length}&avatar=${ppnya}`
 const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || '-'
 ronzz.sendMessage(
 update.id, 
 { 
-image: { url: welcomenya },
+image: { url: ppuser },
 caption: `*Welcome To ${metadata.subject}*
 
 📛 : _@${num.split("@")[0]}_
@@ -230,18 +223,11 @@ var ppuser = await ronzz.profilePictureUrl(num, 'image')
 } catch {
 var ppuser = 'https://telegra.ph/file/265c672094dfa87caea19.jpg'
 }
-var stream = await getBuffer(ppuser) 
-let buffer = Buffer.from([])
-buffer = Buffer.concat([buffer, stream])
-fs.writeFileSync('./options/sticker/left.jpg', buffer)
-let ppnya = await TelegraPh('./options/sticker/left.jpg')
-let namenya = await ronzz.getName(num.split('@')[0]+"@s.whatsapp.net")
-let leftnya = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${namenya}&text2=Leave+From+${metadata.subject}&text3=Member+${metadata.participants.length}&avatar=${ppnya}`
 const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || '-'
 ronzz.sendMessage(
 update.id, 
 {
-image: { url: leftnya },
+image: { url: ppuser },
 caption: `*Leave From Grup ${metadata.subject}*
 
 📛 : _@${num.split("@")[0]}_
