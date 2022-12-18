@@ -204,8 +204,7 @@ fs.writeFileSync('./options/sticker/welcome.jpg', buffer)
 let ppnya = await TelegraPh('./options/sticker/welcome.jpg')
 let namenya = await ronzz.getName(num.split('@')[0]+"@s.whatsapp.net")
 let welcomenya = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${namenya}&text2=Welcome+To+${metadata.subject}&text3=Member+${metadata.participants.length ? metadata.participants.length : "Undefined"}&avatar=${ppnya}`
-const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || 'Tidak ada bio, mungkin kamu privateðŸ™'
-var button = [{ buttonId: '!text_grup', buttonText: { displayText: 'Welcome👋'}, type: 1 }]
+const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || '-'
 await ronzz.sendMessage(
 update.id, 
 { 
@@ -221,7 +220,7 @@ caption: `*Welcome To ${metadata.subject}*
 
 📄 *Deskripsi :*
 ${metadata.desc ? metadata.desc : 'Tidak ada deskripsi'}`,
-buttons: button, 
+buttons: [{ buttonId: '!text_grup', buttonText: { displayText: 'Welcome👋'}, type: 1 }], 
 footer: footer,
 mentions: [num] })
 }
@@ -238,8 +237,7 @@ fs.writeFileSync('./options/sticker/left.jpg', buffer)
 let ppnya = await TelegraPh('./options/sticker/left.jpg')
 let namenya = await ronzz.getName(num.split('@')[0]+"@s.whatsapp.net")
 let leftnya = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${namenya}&text2=Leave+From+${metadata.subject}&text3=Member+${metadata.participants.length ? metadata.participants.length : "Undefined"}&avatar=${ppnya}`
-const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || 'Tidak ada bio, mungkin kamu privateðŸ™'
-var button = [{ buttonId: '!text_grup', buttonText: { displayText: 'GoodBye👋'}, type: 1 }]
+const bio = (await ronzz.fetchStatus(num).catch(console.error) || {}).status || '-'
 await ronzz.sendMessage(
 update.id, 
 {
@@ -254,7 +252,7 @@ caption: `*Leave From Grup ${metadata.subject}*
 ⏰ : _${jamwib} *WIB*_
 
 *┗━━ ❑ GoodBye👋*`,
-buttons: button,
+buttons: [{ buttonId: '!text_grup', buttonText: { displayText: 'GoodBye👋'}, type: 1 }],
 footer: footer, 
 mentions: [num] })
 }
