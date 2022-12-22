@@ -3752,7 +3752,7 @@ let button = [
 { buttonId: `${prefix}donasi`, buttonText: { displayText: '💰 Donate' }, type: 1 },
 { buttonId: `${prefix}sourcecode`, buttonText: { displayText: '👨‍💻 Countributor' }, type: 1 }
 ]
-ronzz.sendButton(from, teks, button, footer, msg, { 'document': {'url':'https://github.com/Ronzz-Ofc/BaseBotMD'},'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','fileName':footer,'fileLength':'99999999999999','pageCount':'999','previewType':'docx', contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}})
+ronzz.sendMessage(from, { text: teks, buttons: button, footer: footer, mentions: [sender,ownerNome+"@s.whatsapp.net"], 'document': {'url':'https://github.com/Ronzz-Ofc/BaseBotMD'},'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','fileName':footer,'fileLength':'99999999999999','pageCount':'999','previewType':'docx', contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}}, { quoted: msg })
 }
 addCmd(command, 1, db_dashboard)
 break
