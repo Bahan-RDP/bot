@@ -264,21 +264,20 @@ return path_file}
 }
 
 //Ucapan waktu
-const ucapanWaktu = ''
-if (dt >= 0) {
-    ucapanWaktu = ('Selamat Malam🌃')
+  if (dt >= 0) {
+    var ucapanWaktu = ('Selamat Malam🌃')
   }
   if (dt >= 4) {
-    ucapanWaktu = ('Selamat Pagi🌄')
+    var ucapanWaktu = ('Selamat Pagi🌄')
   }
   if (dt >= 12) {
-    ucapanWaktu = ('Selamat Siang☀️')
+    var ucapanWaktu = ('Selamat Siang☀️')
   }
   if (dt >= 16) {
-    ucapanWaktu = ('️ Selamat Sore🌇')
+    var ucapanWaktu = ('️ Selamat Sore🌇')
   }
   if (dt >= 23) {
-    ucapanWaktu = ('Selamat Malam🌙')
+    var ucapanWaktu = ('Selamat Malam🌙')
   }
 
 function mentions(teks, mems = [], id) {
