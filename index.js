@@ -6868,23 +6868,22 @@ if (!isGroupAdmins) return reply(mess.admin)
 if (!isBotGroupAdmins) return reply(mess.botAdmin)
 if (groupMembers.length == 257) return reply(`Anda tidak dapat menambah peserta, karena Grup sudah penuh!`)
 var mems = []
-groupMembers.map( i => mems.push(i.id) )
-var number;
+groupMembers.map(i => mems.push(i.id))
 if (args.length > 1) {
-number = q+"@s.whatsapp.net"
+var number = q+"@s.whatsapp.net"
 var cek = await ronzz.onWhatsApp(number)
 if (cek.length == 0) return reply(`Masukkan nomer yang valid dan terdaftar di WhatsApp`)
 if (mems.includes(number)) return reply(`Nomer tersebut sudah berada didalam grup!`)
 ronzz.groupParticipantsUpdate(from, [number], "add")
-.then( res => reply(`*Sukses...*`))
+.then(res => reply(`*Sukses...*`))
 .catch((err) => reply(mess.error.api))
 } else if (isQuotedMsg) {
-number = quotedMsg.sender
+var number = quotedMsg.sender
 var cek = await ronzz.onWhatsApp(number)
 if (cek.length == 0) return reply(`Peserta tersebut sudah tidak terdaftar di WhatsApp`)
 if (mems.includes(number)) return reply(`Nomer tersebut sudah berada didalam grup!`)
 ronzz.groupParticipantsUpdate(from, [number], "add")
-.then( res => reply(`*Sukses...*`))
+.then(res => reply(`*Sukses...*`))
 .catch((err) => reply(mess.error.api))
 } else {
 reply(`Kirim perintah ${prefix+command} nomer atau balas pesan orang yang ingin dimasukkan`)
