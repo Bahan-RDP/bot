@@ -23,7 +23,7 @@ const threshold = 0.72
 let antilink = JSON.parse(fs.readFileSync('./database/bot/antilink.json'));
 let welcome = JSON.parse(fs.readFileSync('./database/bot/welcome.json'));
 let set_done = JSON.parse(fs.readFileSync('./database/bot/set_done.json'));
-let anonim = JSON.parse(fs.readFileSync('./database/bot/anonim.json'));
+let anoni = JSON.parse(fs.readFileSync('./database/bot/anoni.json'));
 let user = JSON.parse(fs.readFileSync('./database/bot/user.json'));
 let db_menfes = JSON.parse(fs.readFileSync('./database/bot/menfess.json'));
 let set_proses = JSON.parse(fs.readFileSync('./database/bot/set_proses.json'));
@@ -115,7 +115,7 @@ const content = JSON.stringify(msg.message)
 const from = msg.key.remoteJid
 const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type === 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type === 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type === 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type === 'buttonsResponseMessage') && quotedMsg.fromMe && msg.message.buttonsResponseMessage.selectedButtonId ? msg.message.buttonsResponseMessage.selectedButtonId : (type === 'templateButtonReplyMessage') && quotedMsg.fromMe && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : (type === 'messageContextInfo') ? (msg.message.buttonsResponseMessage?.selectedButtonId || msg.message.listResponseMessage?.singleSelectReply.selectedRowId) : (type == 'listResponseMessage') && quotedMsg.fromMe && msg.message.listResponseMessage.singleSelectReply.selectedRowId ? msg.message.listResponseMessage.singleSelectReply.selectedRowId : ""
 const toJSON = j => JSON.stringify(j, null,'\t')
-const prefix = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/.test(chats) ? chats.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/gi) : '#'
+const prefix = [''] ? /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/.test(chats) ? chats.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/gi) : '' : [''] ?? '#'
 const isGroup = msg.key.remoteJid.endsWith('@g.us')
 const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
 const isOwner = ["628817839722","16784037437",owner,ronzz.user.id.split('@')[0]].includes(sender.split('@')[0]) ? true : false
@@ -3131,12 +3131,12 @@ ronzz.groupParticipantsUpdate(from, [sender], "remove")
 
 //Auto Write Database Anonymous Every 30 Second's
 setInterval(async () => {
-fs.writeFileSync('./database/bot/anonim.json', JSON.stringify(anonim, null, 2))
+fs.writeFileSync('./database/bot/anoni.json', JSON.stringify(anoni, null, 2))
 }, 30 * 1000)
 
 //For Action Anonymous Chat
 if (!isGroup && !msg.key.fromMe) {
-let rums = Object.values(anonim).find(room => [room.a, room.b].includes(sender) && room.state == "CHATTING")
+let rums = Object.values(anoni).find(room => [room.a, room.b].includes(sender) && room.state == "CHATTING")
 if (rums) {
 var partnerJID = [rums.a, rums.b].find(user => user !== sender)
 if (msg.type == "conversation") {
@@ -7820,8 +7820,8 @@ break
 case 'start': case 'search':{
 if (cekUser("id", sender) == null) return sendMessRegis(from)
 if (isGroup) return reply(mess.private)
-var rumss = Object.values(anonim).find(room => anonyCheck(sender, room))
-var rooms = Object.values(anonim).find(room => anonyCheck(sender, room) && room.state == 'CHATTING')
+var rumss = Object.values(anoni).find(room => anonyCheck(sender, room))
+var rooms = Object.values(anoni).find(room => anonyCheck(sender, room) && room.state == 'CHATTING')
 if (rooms) {
 var but = [
 { buttonId: prefix+'stop', buttonText: { displayText: "❌ STOP ❌" }, type: 1 },
@@ -7835,7 +7835,7 @@ var teks = `[🔎] Mohon tunggu sedang mencari teman chat`
 var but = [ { buttonId: prefix+'stop', buttonText: { displayText: "❌ STOP ❌" }, type: 1 } ]
 return ronzz.sendMessage(from, { text: teks, footer: `${botName} © 2022`, buttons: but })
 }
-var roomm = Object.values(anonim).find(room => room.state == "WAITING" && !anonyCheck(sender, room))
+var roomm = Object.values(anoni).find(room => room.state == "WAITING" && !anonyCheck(sender, room))
 if (roomm) {
 var but = [
 { buttonId: prefix+'stop', buttonText: { displayText: "❌ STOP ❌" }, type: 1 },
@@ -7849,7 +7849,7 @@ await ronzz.sendMessage(roomm.a, { text: teks, footer: `${botName} © 2022`, but
 await ronzz.sendMessage(roomm.b, { text: teks, footer: `${botName} © 2022`, buttons: but })
 } else if (!rooms) {
 let id = + new Date
-anonim[id] = {
+anoni[id] = {
 id,
 a: sender,
 b: '',
@@ -7867,7 +7867,7 @@ break
 case 'stop':{
 if (cekUser("id", sender) == null) return sendMessRegis(from)
 if (isGroup) return reply(mess.private)
-var roomo = Object.values(anonim).find(room => anonyCheck(sender, room))
+var roomo = Object.values(anoni).find(room => anonyCheck(sender, room))
 if (!roomo) {
 var but = [
   { buttonId: prefix+'start', buttonText: { displayText: "🔎 SEARCH 🔎" }, type: 1 }
@@ -7883,7 +7883,7 @@ var teks2 = `[⚠️] Sesi chat ini telah diberhentikan oleh teman chat kamu`
 await ronzz.sendMessage(from, { text: teks, footer: `${botName} © 2022`, buttons: but })
 let other = anonyOther(sender, roomo)
 if (other) await ronzz.sendMessage(other, { text: teks2, footer: `${botName} © 2022`, buttons: but })
-delete anonim[roomo.id]
+delete anoni[roomo.id]
 }
 }
 break
@@ -7891,7 +7891,7 @@ break
 case 'next': case 'skip':{
 if (cekUser("id", sender) == null) return sendMessRegis(from)
 if (isGroup) return reply(mess.private)
-let romeo = Object.values(anonim).find(room => anonyCheck(sender, room))
+let romeo = Object.values(anoni).find(room => anonyCheck(sender, room))
 var but = [
 { buttonId: prefix+'start', buttonText: { displayText: "🔎 SEARCH 🔎" }, type: 1 }
 ]
@@ -7902,9 +7902,9 @@ return await ronzz.sendMessage(from, { text: teks, footer: `${botName} © 2022`,
 let other = anonyOther(sender, romeo)
 var teks1 = `[⚠️] Sesi chat ini telah diberhentikan oleh teman chat kamu! ❌`
 if (other) await ronzz.sendMessage(other, { text: teks1, footer: `${botName} © 2022`, buttons: but })
-delete anonim[romeo.id]
+delete anoni[romeo.id]
 }
-let room = Object.values(anonim).find(room => room.state == "WAITING" && !anonyCheck(sender, room))
+let room = Object.values(anoni).find(room => room.state == "WAITING" && !anonyCheck(sender, room))
 if (room) {
 var but = [
   { buttonId: prefix+'stop', buttonText: { displayText: "❌ STOP ❌" }, type: 1 },
@@ -7918,7 +7918,7 @@ await ronzz.sendMessage(room.a, { text: teks, footer: `${botName} © 2022`, butt
 await ronzz.sendMessage(room.b, { text: teks, footer: `${botName} © 2022`, buttons: but })
 } else {
 let id = + new Date
-anonim[id] = {
+anoni[id] = {
     id,
     a: sender,
     b: '',
@@ -7936,7 +7936,7 @@ break
 case 'sendprofile': case 'sendprofil':{
 if (cekUser("id", sender) == null) return sendMessRegis(from)
 if (isGroup) return reply(mess.private)
-let rms = Object.values(anonim).find(room => anonyCheck(sender, room) && room.state == 'CHATTING')
+let rms = Object.values(anoni).find(room => anonyCheck(sender, room) && room.state == 'CHATTING')
 var but = [
 { buttonId: prefix+'start', buttonText: { displayText: "🔎 SEARCH 🔎" }, type: 1 }
 ]
@@ -7944,7 +7944,7 @@ if (!rms) {
 var teks = `[⚠️] Kamu belum pernah memulai chat! ❌`
 await ronzz.sendMessage(from, { text: teks, footer: `${botName} © 2022`, buttons: but })
 } else {
-let rms = Object.values(anonim).find(room => [room.a, room.b].includes(sender) && room.state == "CHATTING")
+let rms = Object.values(anoni).find(room => [room.a, room.b].includes(sender) && room.state == "CHATTING")
 var partnerJID = anonyOther(sender, rms)
 var res = await sendContact(partnerJID, sender.split("@")[0], pushname)
 ronzz.sendMessage(from, { text: '[✅] Berhasil mengirim profil ke teman chat anda!' }, { quoted: msg })
@@ -8191,8 +8191,8 @@ user.splice(para_kos)
 fs.writeFileSync('./database/bot/user.json', JSON.stringify(user))
 db_error.splice(para_kos)
 fs.writeFileSync('./database/bot/error.json', JSON.stringify(db_error))
-anonim.splice(para_kos)
-fs.writeFileSync('./database/bot/anonim.json', JSON.stringify(anonim))
+anoni.splice(para_kos)
+fs.writeFileSync('./database/bot/anoni.json', JSON.stringify(anoni))
 }
 reply('Sukses Restart database.')
 addCmd(command, 1, db_dashboard)
