@@ -100,7 +100,7 @@ const enter3 = "\n\n\n"
 const lolkey = 'SadTeams'
 
 // Hosting
-const host = "vip-agunghost.buyerpo.my.id" //adonxd
+const hostp = "vip-agunghost.buyerpo.my.id" //adonxd
 const uroot = "root"
 const proot = "Oki250918@"
 const ipanda = "4.193.105.14" //54.345.3.22
@@ -5468,7 +5468,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda
@@ -5494,7 +5494,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5536,7 +5536,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5562,7 +5562,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5604,7 +5604,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5630,7 +5630,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5672,7 +5672,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5698,7 +5698,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5740,7 +5740,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5766,7 +5766,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5808,7 +5808,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5834,7 +5834,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5876,7 +5876,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5902,7 +5902,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -5944,7 +5944,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -5970,7 +5970,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -6013,7 +6013,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -6039,7 +6039,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -6082,7 +6082,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -6108,7 +6108,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -6150,7 +6150,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
@@ -6176,7 +6176,7 @@ let pendek = hasil.pendek
 user = user.replace(/\s+/g, '');
 pass = pass.replace(/\s+/g, '');
 var inputt = {
-server: host, 
+server: hostp, 
 user: user,
 pass: pass,
 userwhm: uroot,
@@ -6286,7 +6286,7 @@ if (cekSaldo(sender ,db_saldo) < 10000) return reply(`Maaf *${cekUser("name", se
 minSaldo(sender, Number('10000'), db_saldo)
 reply(mess.wait)                 
 var inputt = {
-server: host,
+server: hostp,
 userwhm: uroot,
 passwhm: proot,
 ip: ipanda,
