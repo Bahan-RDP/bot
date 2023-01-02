@@ -4909,9 +4909,9 @@ case 'addserver':{
 if (!isOwner) return reply(mess.owner)
 let name = q.split('|')[0] ? q.split('|')[0]: q
 let user = q.split('|')[1] ? q.split('|')[1]: ''
-let memory = q.split('|')[3] ? q.split('|')[3]: ''
-let disk = q.split('|')[4] ? q.split('|')[4]: ''
-let cpu = q.split('|')[5] ? q.split('|')[5]: ''
+let memory = q.split('|')[2] ? q.split('|')[2]: ''
+let disk = q.split('|')[3] ? q.split('|')[3]: ''
+let cpu = q.split('|')[4] ? q.split('|')[4]: ''
 if (!name) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|1|1024|10240|100`)
 if (!user) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|1|1024|10240|100`)
 if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|1024|10240|100`)
