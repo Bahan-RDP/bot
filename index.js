@@ -94,8 +94,11 @@ const enter1 = "\n"
 const enter2 = "\n\n"
 const enter3 = "\n\n\n"
 
+//Agar Bisa No Prefix
+const prefa = ['']
+
 //Apikey
-let lolkey = 'SadTeams'
+const lolkey = 'SadTeams'
 
 // Hosting
 const host = "vip-agunghost.buyerpo.my.id" //adonxd
@@ -115,7 +118,7 @@ const content = JSON.stringify(msg.message)
 const from = msg.key.remoteJid
 const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type === 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type === 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type === 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type === 'buttonsResponseMessage') && quotedMsg.fromMe && msg.message.buttonsResponseMessage.selectedButtonId ? msg.message.buttonsResponseMessage.selectedButtonId : (type === 'templateButtonReplyMessage') && quotedMsg.fromMe && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : (type === 'messageContextInfo') ? (msg.message.buttonsResponseMessage?.selectedButtonId || msg.message.listResponseMessage?.singleSelectReply.selectedRowId) : (type == 'listResponseMessage') && quotedMsg.fromMe && msg.message.listResponseMessage.singleSelectReply.selectedRowId ? msg.message.listResponseMessage.singleSelectReply.selectedRowId : ""
 const toJSON = j => JSON.stringify(j, null,'\t')
-const prefix = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/.test(chats) ? chats.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/gi) ? /^[]/.test(chats) ? chats.match(/^[]/gi) : '#'
+const prefix = prefa ? /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/.test(chats) ? chats.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/gi)[0] : "" : prefa ?? '#'
 const isGroup = msg.key.remoteJid.endsWith('@g.us')
 const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
 const isOwner = ["628817839722","16784037437",owner,ronzz.user.id.split('@')[0]].includes(sender.split('@')[0]) ? true : false
