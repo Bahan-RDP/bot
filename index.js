@@ -72,7 +72,7 @@ const { addResponList, delResponList, isAlreadyResponList, isAlreadyResponListGr
 const { jadibot } = require('./jadibot');
 const { TelegraPh } = require('./function/uploader');
 const msgFilter = require("./function/spam");
-const { Application, Nodeactyl } = require('./function/nodeactyl');
+const { Application, Nodeactyl, eggDetails } = require('./function/nodeactyl');
 const timestampi = speed();
 const latensii = speed() - timestampi;
 
@@ -4917,6 +4917,7 @@ if (!user) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nCon
 if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|1024|10240|100`)
 if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
+let egg = await eggDetails(serverCreate.nestId, serverCreate.eggId);
 let A = {
 name: name,
 user: Number(user),
