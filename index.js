@@ -3487,15 +3487,34 @@ let teks = `╭━━━━━━━━━━━━━━━┅•ิ.•ஐ
 │◯ *WIT :* ${jamwit}
 │
 ╰━━━━━━━━━━━━━━━━┅•ิ.•ஐ
-
-
 `
-let button = [
-{ buttonId: `${prefix}listmenu`, buttonText: { displayText: '📖 List Menu' }, type: 1 },
-{ buttonId: `${prefix}owner`, buttonText: { displayText: '🙍‍♂️ Owner' }, type: 1 },
-{ buttonId: `${prefix}donasi`, buttonText: { displayText: '💰 Donate' }, type: 1 }
-]
-ronzz.sendMessage(from, { caption: teks, buttons: button, footer: footer, mentions: [sender,ownerNomer+"@s.whatsapp.net"], 'document': {'url':'https://github.com/Ronzz-Ofc/BaseBotMD'},'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','fileName':footer,'fileLength':'99999999999999','pageCount':'999','previewType':'docx', contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}}, { quoted: msg })
+let btn = [{
+urlButton: {
+displayText: 'Source Code',
+url: 'https://github.com/Ronzz-Ofc/BaseBotMD'
+}
+}, {
+urlButton: {
+displayText: 'YouTube Creator',
+url: 'https://youtube.com/c/RonzzYT'
+}
+}, {
+quickReplyButton: {
+displayText: 'List Menu',
+id: prefix+'listmenu'
+}
+}, {
+quickReplyButton: {
+displayText: 'Owner',
+id: prefix+'owner'
+}  
+}, {
+quickReplyButton: {
+displayText: 'Donate',
+id: prefix+'donasi'
+}
+}]
+ronzz.send5ButDoc(from, footer, teks, btn, footer, [sender,ownerNomer+"@s.whatsapp.net"], msg, { contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}})
 }
 addCmd(command, 1, db_dashboard)
 break
@@ -4877,152 +4896,6 @@ let text_request =`*| REQUEST FITUR |*\n`
 text_request +=`Dari : ${sender.split('@')[0]}\n`
 text_request +=`Pesan : ${pesan_request}`
 ronzz.sendMessage(`${ownerNomer}@s.whatsapp.net`, {text: text_request}, {quoted:fkontak})
-break
-
-case 'adduser':{
-if (!isOwner) return reply(mess.owner)
-let email = q.split('|')[0] ? q.split('|')[0]: q
-let username = q.split('|')[1] ? q.split('|')[1]: ''
-if (!email) return reply(`Ex : ${prefix+command} Email|Username\n\nContoh :\n${prefix+command} example@gmail.com|example`)
-if (!username) return reply(`Ex : ${prefix+command} Email|Username\n\nContoh :\n${prefix+command} ${email}|example`)
-Application.createUser(
-email,
-username,
-username,
-username
-).then((x) => {
-reply(`*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n${x.meta.resource}`)
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'deluser':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} user id\n\nContoh :\n${prefix+command} 2`)
-Application.deleteUser(Number(q)).then((x) => {
-reply('*SUKSES DELETE USER*')
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'addserver':{
-if (!isOwner) return reply(mess.owner)
-let name = q.split('|')[0] ? q.split('|')[0]: q
-let user = q.split('|')[1] ? q.split('|')[1]: ''
-let memory = q.split('|')[2] ? q.split('|')[2]: ''
-let disk = q.split('|')[3] ? q.split('|')[3]: ''
-let cpu = q.split('|')[4] ? q.split('|')[4]: ''
-if (!name) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|1|1024|10240|100`)
-if (!user) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|1|1024|10240|100`)
-if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|1024|10240|100`)
-if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
-let egg = await eggDetails(serverCreate.nestId, serverCreate.eggId);
-let A = {
-name: name,
-user: Number(user),
-egg: Number(serverCreate.eggId),
-docker_image: egg.attributes.docker_image,
-startup: egg.attributes.startup,
-environment: serverCreate.eggs[findIndex].environment,
-limits: {
-memory: Number(memory),
-swap: 0,
-disk: Number(disk),
-io: 500,
-cpu: Number(cpu),
-},
-feature_limits: {
-databases: serverCreate.limits.db,
-backups: serverCreate.limits.backups,
-allocations: serverCreate.limits.allocations,
-},
-allocation: {
-default: 1,
-}
-}
-fetch(`${host}/api/application/servers`, {
-method: "POST",
-followRedirect: true,
-maxRedirects: 5,
-headers: {
-Authorization: "Bearer " + application.api_key,
-"Content-Type": "application/json",
-Accept: "Application/vnd.pterodactyl.v1+json",
-},
-body: JSON.stringify(A),
-})
-.then((d) => d.json())
-.then((x) => {
-reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'delserver':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.deleteServer(Number(q)).then((x) => {
-reply('*SUKSES DELETE SERVER*')
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'susserver':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.suspendServer(Number(q)).then((x) => {
-reply('*SUKSES SUSPEND SERVER*')
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'unsusserver':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.unsuspendServer(Number(q)).then((x) => {
-reply('*SUKSES UNSUSPEND SERVER*')
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'allserver':{
-if (!isOwner) return reply(mess.owner)
-Application.getAllServers().then((x) => {
-let num = 0;
-let teks = `*〔 All Servers 〕*\n\n`;
-for (let i of x.data) {
-let y = i.attributes;
-num += 1;
-teks += `*${num}. ${y.name}*\n• ID: ${y.id}\n• Identifier: ${y.identifier}\n• UUID: ${y.uuid}\n• RAM: ${y.limits.memory}\n• Database: ${y.feature_limits.databases}\n• Allocations: ${y.feature_limits.allocations}\n• Node: ${y.node}\n\n`;
-}
-reply(teks);
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'alluser':{
-if (!isOwner) return reply(mess.owner)
-Application.getAllUsers().then((x) => {
-let num = 0;
-let teks = `*〔 All Users 〕*\n\n`;
-for (let i of x.data) {
-let y = i.attributes;
-num += 1;
-teks += `*${num}. ${y.username}*\n• Identifier: ${y.id}\n• UUID: ${y.uuid}\n• Email: ${y.email}\n• First Name/Last Name: ${y.first_name}/${y.last_name}\n• Created At: ${y.created_at}\n• ${host}/admin/users/view/${y.id}\n\n`;
-}
-reply(teks);
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'getuserdetail':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} user id\n\nContoh :\n${prefix+command} 1`)
-Application.getAllUsers(Number(q)).then((y) => {
-reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
-})
-}
 break
 
 case 'jadibot': {
