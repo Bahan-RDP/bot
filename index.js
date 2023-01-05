@@ -3488,33 +3488,12 @@ let teks = `╭━━━━━━━━━━━━━━━┅•ิ.•ஐ
 │
 ╰━━━━━━━━━━━━━━━━┅•ิ.•ஐ
 `
-let btn = [{
-urlButton: {
-displayText: 'Source Code',
-url: 'https://github.com/Ronzz-Ofc/BaseBotMD'
-}
-}, {
-urlButton: {
-displayText: 'YouTube Creator',
-url: 'https://youtube.com/c/RonzzYT'
-}
-}, {
-quickReplyButton: {
-displayText: 'List Menu',
-id: prefix+'listmenu'
-}
-}, {
-quickReplyButton: {
-displayText: 'Owner',
-id: prefix+'owner'
-}  
-}, {
-quickReplyButton: {
-displayText: 'Donate',
-id: prefix+'donasi'
-}
-}]
-ronzz.send5ButDoc(from, footer, teks, btn, footer, [sender,ownerNomer+"@s.whatsapp.net"], msg, { contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}})
+let button = [
+{ buttonId: `${prefix}listmenu`, buttonText: { displayText: '📖 List Menu' }, type: 1 },
+{ buttonId: `${prefix}owner`, buttonText: { displayText: '🙍‍♂️ Owner' }, type: 1 },
+{ buttonId: `${prefix}donasi`, buttonText: { displayText: '💰 Donate' }, type: 1 }
+]
+ronzz.sendMessage(from, { caption: teks, buttons: button, footer: footer, mentions: [sender,ownerNomer+"@s.whatsapp.net"], 'document': {'url':'https://github.com/Ronzz-Ofc/BaseBotMD'},'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','fileName':footer,'fileLength':'99999999999999','pageCount':'999','previewType':'docx', contextInfo: { externalAdReply: { showAdAttribution: true, sourceUrl: 'https://youtu.be/ZJRuLQjkPmw', mediaType: 2, description: footer, title: `${ucapanWaktu} ${pushname}`, body: `Subscribe Ronzz YT`, previewType: 0, thumbnail: fs.readFileSync(thumbnail), mediaUrl: 'https://youtu.be/ZJRuLQjkPmw'}}}, { quoted: msg })
 }
 addCmd(command, 1, db_dashboard)
 break

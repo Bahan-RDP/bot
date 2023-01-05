@@ -267,10 +267,6 @@ console.log(err)
             return ronzz.sendMessage(jid, buttonMessage, { quoted, ...options })
         }
         
-        ronzz.send5ButDoc = async (jid, fileName, teks, button = [], footer, mentions = [], quoted = '', options = {}) => {
-            return ronzz.sendMessage(jid, { 'document': {'url':'https://github.com/Ronzz-Ofc/BaseBotMD'},'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','fileName':fileName,'fileLength':'99999999999999','pageCount':'999','previewType':'docx', caption: teks, templateButtons: button, footer: footer, mentions: mentions, ...options }, { quoted: quoted, ...options })
-        }
-        
         ronzz.ev.on('group-update', async (anu) => {
            updateGroup(ronzz, anu, MessageType)
         })
