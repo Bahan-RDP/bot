@@ -4908,26 +4908,37 @@ if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\
 if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
 Application.createServer(
-name: name,
-user: Number(user),
-egg: Number(serverCreate.eggId),
-docker_image: 'quay.io/yajtpg/pterodactyl-images:nodejs-19',
-startup: '/start.sh',
-environment: serverCreate.eggs.environment,
-limits: {
-memory: Number(memory),
-swap: 0,
-disk: Number(disk),
-io: 500,
-cpu: Number(cpu),
+{
+'name': name,
+'user': Number(user),
+'egg': Number(serverCreate.eggId),
+'docker_image': "quay.io/yajtpg/pterodactyl-images:nodejs-19",
+'startup': "/start.sh",
+'limits': {
+'memory': Number(memory),
+'swap': 0,
+'disk': Number(disk),
+'io': 500,
+'cpu': Number(cpu),
 },
-feature_limits: {
-databases: serverCreate.limits.db,
-backups: serverCreate.limits.backups,
-allocations: serverCreate.limits.allocations,
+'feature_limits': {
+'databases': serverCreate.limits.db,
+'allocations': serverCreate.limits.allocations,
+'backups': serverCreate.limits.backups
 },
-allocation: {
-default: 1,
+'environment': serverCreate.eggs.environment,
+'allocation': {
+'default': 1,
+'additional': [],
+},
+'deploy': {
+'locations': [1],
+'dedicated_ip': false,
+'port_range': [],
+},
+'start_on_completion': true,
+'skip_scripts': false,
+'oom_disabled': true,
 }
 ).then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
