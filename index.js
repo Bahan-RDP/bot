@@ -4907,7 +4907,32 @@ if (!user) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nCon
 if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|1024|10240|100`)
 if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
-let A = {
+Application.createServer(
+name,
+Number(user),
+Number(serverCreate.eggId),
+'quay.io/yajtpg/pterodactyl-images:nodejs-19',
+'/start.sh',
+serverCreate.eggs.environment,
+{
+Number(memory),
+0,
+Number(disk),
+500,
+Number(cpu),
+},
+{
+serverCreate.limits.db,
+serverCreate.limits.backups,
+serverCreate.limits.allocations,
+},
+{
+default: 1,
+}
+).then((x) => {
+reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
+}).catch(() => reply(mess.errorApi))
+/*let A = {
 name: name,
 user: Number(user),
 egg: Number(serverCreate.eggId),
@@ -4945,6 +4970,7 @@ body: JSON.stringify(A),
 .then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
 }).catch(() => reply(mess.errorApi))
+*/
 }
 break
 
