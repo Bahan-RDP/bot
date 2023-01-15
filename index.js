@@ -4908,25 +4908,25 @@ if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\
 if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
 Application.createServer(
-name,
-Number(user),
-Number(serverCreate.eggId),
-'quay.io/yajtpg/pterodactyl-images:nodejs-19',
-'/start.sh',
-serverCreate.eggs.environment,
-{
-Number(memory),
-0,
-Number(disk),
-500,
-Number(cpu),
+name: name,
+user: Number(user),
+egg: Number(serverCreate.eggId),
+docker_image: 'quay.io/yajtpg/pterodactyl-images:nodejs-19',
+startup: '/start.sh',
+environment: serverCreate.eggs.environment,
+limits: {
+memory: Number(memory),
+swap: 0,
+disk: Number(disk),
+io: 500,
+cpu: Number(cpu),
 },
-{
-serverCreate.limits.db,
-serverCreate.limits.backups,
-serverCreate.limits.allocations,
+feature_limits: {
+databases: serverCreate.limits.db,
+backups: serverCreate.limits.backups,
+allocations: serverCreate.limits.allocations,
 },
-{
+allocation: {
 default: 1,
 }
 ).then((x) => {
