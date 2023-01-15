@@ -4873,25 +4873,57 @@ case 'adduser':{
 if (!isOwner) return reply(mess.owner)
 let email = q.split('|')[0] ? q.split('|')[0]: q
 let username = q.split('|')[1] ? q.split('|')[1]: ''
-if (!email) return reply(`Ex : ${prefix+command} Email|Username\n\nContoh :\n${prefix+command} example@gmail.com|example`)
-if (!username) return reply(`Ex : ${prefix+command} Email|Username\n\nContoh :\n${prefix+command} ${email}|example`)
+let nomor = q.split('|')[2] ? q.split('|')[2]: ''
+if (!email) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com|example|@user`)
+if (!username) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|example|@user`)
+if (!nomor) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|${username}|@user`)
+let psswd = require("crypto").randomBytes(5).toString("hex").toUpperCase()
+let nomornya = nomor.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 Application.createUser(
 email,
 username,
 username,
-username
+'#buyer',
+psswd
 ).then((x) => {
-reply(`*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n${x.meta.resource}`)
+ronzz.sendMessage(from, { text: `*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\nFirst Name/Last Name: ${x.attributes.first_name}/${x.attributes.last_name}\n• Created At: ${x.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
+ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\nFirst Name/Last Name: ${x.attributes.first_name}/${x.attributes.last_name}\n• Created At: ${x.attributes.created_at}\n*Password :* ${psswd}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
 }).catch(() => reply(mess.errorApi))
 }
 break
 
 case 'deluser':{
 if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} user id\n\nContoh :\n${prefix+command} 2`)
-Application.deleteUser(Number(q)).then((x) => {
+if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
+const user = await Application.getUserByUsername(q)
+Application.deleteUser(user.attributes.id).then((x) => {
 reply('*SUKSES DELETE USER*')
+}).catch(() => reply('Username invalid atau tidak ada!'))
+}
+break
+
+case 'alluser':{
+if (!isOwner) return reply(mess.owner)
+Application.getAllUsers().then((x) => {
+let num = 0;
+let teks = `*〔 All Users 〕*\n\n`;
+for (let i of x.data) {
+let y = i.attributes;
+num += 1;
+teks += `*${num}. ${y.username}*\n• Identifier: ${y.id}\n• UUID: ${y.uuid}\n• Email: ${y.email}\n• First Name/Last Name: ${y.first_name}/${y.last_name}\n• Created At: ${y.created_at}\n• ${host}/admin/users/view/${y.id}\n\n`;
+}
+reply(teks);
 }).catch(() => reply(mess.errorApi))
+}
+break
+
+case 'getuserdetail':{
+if (!isOwner) return reply(mess.owner)
+if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
+const user = await Application.getUserByUsername(q)
+Application.getAllUsers(user.attributes.id).then((y) => {
+reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
+}).catch(() => reply('Username invalid atau tidak ada!'))
 }
 break
 
@@ -4902,44 +4934,21 @@ let user = q.split('|')[1] ? q.split('|')[1]: ''
 let memory = q.split('|')[2] ? q.split('|')[2]: ''
 let disk = q.split('|')[3] ? q.split('|')[3]: ''
 let cpu = q.split('|')[4] ? q.split('|')[4]: ''
-if (!name) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|1|1024|10240|100`)
-if (!user) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|1|1024|10240|100`)
-if (!memory) return reply(`Ex : ${prefix+command} name}|${user}|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|1024|10240|100`)
-if (!disk) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|10240|100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name|user|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${user}|${memory}|${disk}|100`)
-Application.createServer(
-{
-'name': name,
-'user': Number(user),
-'egg': Number(serverCreate.eggId),
-'docker_image': "quay.io/yajtpg/pterodactyl-images:nodejs-19",
-'startup': "/start.sh",
-'limits': {
-'memory': Number(memory),
-'swap': 0,
-'disk': Number(disk),
-'io': 500,
-'cpu': Number(cpu),
-},
-'feature_limits': {
-'databases': serverCreate.limits.db,
-'allocations': serverCreate.limits.allocations,
-'backups': serverCreate.limits.backups
-},
-'environment': serverCreate.eggs.environment,
-'allocation': {
-'default': 1,
-'additional': [],
-},
-'deploy': {
-'locations': [1],
-'dedicated_ip': false,
-'port_range': [],
-},
-'start_on_completion': true,
-'skip_scripts': false,
-'oom_disabled': true,
-}
+if (!name) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|ronzzyt22|1024|10240|100`)
+if (!username) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|ronzzyt22|1024|10240|100`)
+if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|1024|10240|100`)
+if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|10240|100`)
+if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|${disk}|100`)
+const user = await Application.getUserByUsername(username)
+Application.createSimpleServer(
+user.attributes.id,
+Number(serverCreate.eggId),
+Number(memory),
+Number(disk),
+Number(cpu),
+Number(serverCreate.limits.db),
+Number(serverCreate.limits.backups),
+Number(serverCreate.limits.allocations)
 ).then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
 }).catch(() => reply(mess.errorApi))
@@ -4990,7 +4999,7 @@ if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
 Application.deleteServer(Number(q)).then((x) => {
 reply('*SUKSES DELETE SERVER*')
-}).catch(() => reply(mess.errorApi))
+}).catch(() => reply('Server id invalid atau tidak ada!'))
 }
 break
 
@@ -4999,7 +5008,7 @@ if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
 Application.suspendServer(Number(q)).then((x) => {
 reply('*SUKSES SUSPEND SERVER*')
-}).catch(() => reply(mess.errorApi))
+}).catch(() => reply('Server id invalid atau tidak ada!'))
 }
 break
 
@@ -5008,7 +5017,7 @@ if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
 Application.unsuspendServer(Number(q)).then((x) => {
 reply('*SUKSES UNSUSPEND SERVER*')
-}).catch(() => reply(mess.errorApi))
+}).catch(() => reply('Server id invalid atau tidak ada!'))
 }
 break
 
@@ -5024,30 +5033,6 @@ teks += `*${num}. ${y.name}*\n• ID: ${y.id}\n• Identifier: ${y.identifier}\n
 }
 reply(teks);
 }).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'alluser':{
-if (!isOwner) return reply(mess.owner)
-Application.getAllUsers().then((x) => {
-let num = 0;
-let teks = `*〔 All Users 〕*\n\n`;
-for (let i of x.data) {
-let y = i.attributes;
-num += 1;
-teks += `*${num}. ${y.username}*\n• Identifier: ${y.id}\n• UUID: ${y.uuid}\n• Email: ${y.email}\n• First Name/Last Name: ${y.first_name}/${y.last_name}\n• Created At: ${y.created_at}\n• ${host}/admin/users/view/${y.id}\n\n`;
-}
-reply(teks);
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'getuserdetail':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} user id\n\nContoh :\n${prefix+command} 1`)
-Application.getAllUsers(Number(q)).then((y) => {
-reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
-})
 }
 break
 
