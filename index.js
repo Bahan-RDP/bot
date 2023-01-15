@@ -4895,8 +4895,8 @@ break
 case 'deluser':{
 if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
-const user = await Application.getUserByUsername(q)
-Application.deleteUser(user.attributes.id).then((x) => {
+const userN = await Application.getUserByUsername(q)
+Application.deleteUser(userN.attributes.id).then((x) => {
 reply('*SUKSES DELETE USER*')
 }).catch(() => reply('Username invalid atau tidak ada!'))
 }
@@ -4920,8 +4920,8 @@ break
 case 'getuserdetail':{
 if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
-const user = await Application.getUserByUsername(q)
-Application.getAllUsers(user.attributes.id).then((y) => {
+const userNy = await Application.getUserByUsername(q)
+Application.getAllUsers(userNy.attributes.id).then((y) => {
 reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
 }).catch(() => reply('Username invalid atau tidak ada!'))
 }
@@ -4939,9 +4939,9 @@ if (!username) return reply(`Ex : ${prefix+command} name|username|memory|disk|cp
 if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|1024|10240|100`)
 if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|${disk}|100`)
-const user = await Application.getUserByUsername(username)
+const userNya = await Application.getUserByUsername(username)
 Application.createSimpleServer(
-user.attributes.id,
+userNya.attributes.id,
 Number(serverCreate.eggId),
 Number(memory),
 Number(disk),
