@@ -4930,26 +4930,51 @@ break
 case 'addserver':{
 if (!isOwner) return reply(mess.owner)
 let name = q.split('|')[0] ? q.split('|')[0]: q
-let user = q.split('|')[1] ? q.split('|')[1]: ''
+let usernameNya = q.split('|')[1] ? q.split('|')[1]: ''
 let memory = q.split('|')[2] ? q.split('|')[2]: ''
 let disk = q.split('|')[3] ? q.split('|')[3]: ''
 let cpu = q.split('|')[4] ? q.split('|')[4]: ''
 if (!name) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|ronzzyt22|1024|10240|100`)
-if (!username) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|ronzzyt22|1024|10240|100`)
-if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|1024|10240|100`)
-if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|10240|100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${username}|${memory}|${disk}|100`)
-const userNya = await Application.getUserByUsername(username)
-Application.createSimpleServer(
-userNya.attributes.id,
-Number(serverCreate.eggId),
-Number(memory),
-Number(disk),
-Number(cpu),
-Number(serverCreate.limits.db),
-Number(serverCreate.limits.backups),
-Number(serverCreate.limits.allocations)
-).then((x) => {
+if (!usernameNya) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|ronzzyt22|1024|10240|100`)
+if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|1024|10240|100`)
+if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|10240|100`)
+if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|${disk}|100`)
+const userNya = await Application.getUserByUsername(usernameNya)
+const ServerBuilder = Nodeactyl.ServerBuilder;
+let json = {
+'name': name,
+'user': userNya.attributes.id,
+'egg': Number(serverCreate.eggId),
+'docker_image': "quay.io/yajtpg/pterodactyl-images:nodejs-19",
+'startup': "/start.sh",
+'limits': {
+'memory': Number(memory),
+'swap': 500,
+'disk': Number(disk),
+'io': 500,
+'cpu': Number(cpu),
+},
+'feature_limits': {
+'databases': serverCreate.limits.db,
+'allocations': serverCreate.limits.allocations,
+'backups': serverCreate.limits.backups
+},
+'environment': serverCreate.eggs.environment,
+'allocation': {
+'default': 1,
+'additional': [],
+},
+'deploy': {
+'locations': [1],
+'dedicated_ip': false,
+'port_range': [],
+},
+'start_on_completion': true,
+'skip_scripts': false,
+'oom_disabled': true,
+}
+        
+new ServerBuilder(json).then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
 }).catch(() => reply(mess.errorApi))
 /*let A = {
