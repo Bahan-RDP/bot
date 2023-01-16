@@ -4886,8 +4886,8 @@ username,
 '#buyer',
 psswd
 ).then((x) => {
-ronzz.sendMessage(from, { text: `*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\nFirst Name/Last Name: ${x.attributes.first_name}/${x.attributes.last_name}\n• Created At: ${x.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
-ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\nFirst Name/Last Name: ${x.attributes.first_name}/${x.attributes.last_name}\n• Created At: ${x.attributes.created_at}\n*Password :* ${psswd}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
+ronzz.sendMessage(from, { text: `*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\n*First Name/Last Name :* ${x.attributes.first_name}/${x.attributes.last_name}\n*Created At :* ${x.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
+ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\n*First Name/Last Name :* ${x.attributes.first_name}/${x.attributes.last_name}\n*Created At :* ${x.attributes.created_at}\n*Password :* ${psswd}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
 }).catch(() => reply(mess.errorApi))
 }
 break
@@ -4940,41 +4940,22 @@ if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu
 if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|${disk}|100`)
 const userNya = await Application.getUserByUsername(usernameNya)
-const ServerBuilder = Nodeactyl.ServerBuilder;
-let json = {
-'name': name,
-'user': userNya.attributes.id,
-'egg': Number(serverCreate.eggId),
-'docker_image': "quay.io/yajtpg/pterodactyl-images:nodejs-19",
-'startup': "/start.sh",
-'limits': {
-'memory': Number(memory),
-'swap': 500,
-'disk': Number(disk),
-'io': 500,
-'cpu': Number(cpu),
-},
-'feature_limits': {
-'databases': serverCreate.limits.db,
-'allocations': serverCreate.limits.allocations,
-'backups': serverCreate.limits.backups
-},
-'environment': serverCreate.eggs.environment,
-'allocation': {
-'default': 1,
-'additional': [],
-},
-'deploy': {
-'locations': [1],
-'dedicated_ip': false,
-'port_range': [],
-},
-'start_on_completion': true,
-'skip_scripts': false,
-'oom_disabled': true,
-}
-        
-new ServerBuilder(json).then((x) => {
+Application.createServer(
+"latest",
+name,
+userNya.attributes.id,
+Number(serverCreate.eggId),
+"quay.io/yajtpg/pterodactyl-images:nodejs-19",
+"/start.sh",
+Number(memory),
+0,
+Number(disk),
+500,
+Number(cpu),
+serverCreate.limits.db,
+serverCreate.limits.backups,
+serverCreate.limits.allocations
+).then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
 }).catch(() => reply(mess.errorApi))
 /*let A = {
