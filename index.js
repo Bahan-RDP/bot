@@ -4920,8 +4920,7 @@ break
 case 'getuserdetail':{
 if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
-const userNy = await Application.getUserByUsername(q)
-Application.getAllUsers(userNy.attributes.id).then((y) => {
+Application.getUserByUsername(q).then((y) => {
 reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
 }).catch(() => reply('Username invalid atau tidak ada!'))
 }
@@ -4940,22 +4939,20 @@ if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu
 if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|${disk}|100`)
 const userNya = await Application.getUserByUsername(usernameNya)
-Application.createServer(
-"latest",
-name,
-userNya.attributes.id,
-Number(serverCreate.eggId),
-"quay.io/yajtpg/pterodactyl-images:nodejs-19",
-"/start.sh",
-Number(memory),
-0,
-Number(disk),
-500,
-Number(cpu),
-serverCreate.limits.db,
-serverCreate.limits.backups,
-serverCreate.limits.allocations
-).then((x) => {
+const serverBuilder = Nodeactyl.ServerBuilder
+let server = new serverBuilder()
+.setServerName(name)
+.setServerOwner(userNya.attributes.id)
+.setServerEgg(Number(serverCreate.eggId))
+.setServerDockerImage("quay.io/yajtpg/pterodactyl-images:nodejs-19")
+.setServerStartup("/start.sh")
+.setServerLimitsJson({'memory': Number(memory), 'swap': 0, 'disk': Number(disk), 'io': 500, 'cpu': Number(cpu)})
+.setServerDatabaseLimit(serverCreate.limits.db)
+.setServerAllocationLimit(serverCreate.limits.allocations)
+.setServerBackupLimit(serverCreate.limits.backups)
+.setServerEnvironmentJson(serverCreate.eggs.environment)
+.setServerDefaultAllocation(1)
+.createServer(Application).then((x) => {
 reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
 }).catch(() => reply(mess.errorApi))
 /*let A = {
