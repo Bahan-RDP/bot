@@ -4869,7 +4869,7 @@ text_report +=`Pesan : ${pesan_report}`
 ronzz.sendMessage(`${ownerNomer}@s.whatsapp.net`, {text: text_report}, {quoted:fkontak})
 break
 
-case 'adduser':{
+case 'addusr':{
 if (!isOwner) return reply(mess.owner)
 let email = q.split('|')[0] ? q.split('|')[0]: q
 let username = q.split('|')[1] ? q.split('|')[1]: ''
@@ -4877,148 +4877,277 @@ let nomor = q.split('|')[2] ? q.split('|')[2]: ''
 if (!email) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com|example|@user`)
 if (!username) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|example|@user`)
 if (!nomor) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|${username}|@user`)
-let psswd = require("crypto").randomBytes(5).toString("hex").toUpperCase()
+let psswd = require("crypto").randomBytes(10).toString("hex").toUpperCase()
 let nomornya = nomor.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
-Application.createUser(
-email,
-username,
-username,
-'#buyer',
-psswd
-).then((x) => {
-ronzz.sendMessage(from, { text: `*SUKSES ADD USER*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\n*First Name/Last Name :* ${x.attributes.first_name}/${x.attributes.last_name}\n*Created At :* ${x.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
-ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${x.attributes.id}\n*UUID :* ${x.attributes. uuid}\n*Username :* ${x.attributes.username}\n*Email :* ${x.attributes.email}\n*First Name/Last Name :* ${x.attributes.first_name}/${x.attributes.last_name}\n*Created At :* ${x.attributes.created_at}\n*Password :* ${psswd}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
+let f = await fetch(host + "/api/application/users", {
+"method": "POST",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+},
+"body": JSON.stringify({
+"email": email,
+"username": username,
+"first_name": username,
+"last_name": "Memb",
+"language": "en",
+"password": psswd
+})
+})
+let res = await f.json();
+if (res.errors) return reply(JSON.stringify(res.errors[0], null, 2));
+ronzz.sendMessage(from, { text: `*SUCCESSFULLY ADD USER*\n\nTYPE: user\n\n*ID :* ${res.attributes.id}\n*UUID :* ${res.attributes. uuid}\n*Username :* ${res.attributes.username}\n*Email :* ${res.attributes.email}\n*First Name/Last Name :* ${res.attributes.first_name}/${res.attributes.last_name}\n*Created At :* ${res.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
+ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${res.attributes.id}\n*UUID :* ${res.attributes. uuid}\n*Username :* ${res.attributes.username}\n*Email :* ${res.attributes.email}\n*First Name/Last Name :* ${res.attributes.first_name}/${res.attributes.last_name}\n*Created At :* ${res.attributes.created_at}\n*Password :* ${psswd}\n*Login :* ${host}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
+}
+break
+
+case 'delusr':{
+if (!isOwner) return reply(mess.owner)
+if (!q) return reply(`Ex : ${prefix+command} userId\n\nContoh :\n${prefix+command} 2`)
+let f = await fetch(host + "/api/application/users/" + q, {
+"method": "DELETE",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let res = f.ok ? {
+errors: null
+} : await f.json()
+if (res.errors) return reply('*USER NOT FOUND*')
+reply('*SUCCESSFULLY DELETE THE USER*')
+}
+break
+
+case 'listusr':{
+if (!isOwner) return reply(mess.owner)
+let page = q ? q : '1'
+let f = await fetch(host + "/api/application/users?page=" + page, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let res = await f.json();
+let users = res.data
+let sections = []
+for (let user of users) {
+let u = user.attributes
+let obj = {
+title: "-- RONZZ YT --",
+rows: [
+{ title: `${u.id}. ${u.username}`, rowId: `${prefix}detusr ` + u.username, description: u.first_name + ' ' + u.last_name },
+]
+}
+await sections.push(obj)
+if (sections.length === 50) {
+sections.push({
+title: "--- RONZZ YT --",
+rows: [
+{ title: `⏩ NEXT`, rowId: `${prefix}listusr 2`, description: 'Page 2' },
+]
+})
+}
+}
+await ronzz.sendMessage(from, {
+text: "Berikut list user *RONZZ YT*",
+footer: `Page: ${res.meta.pagination.current_page}/${res.meta.pagination.total_pages}`,
+title: "*RONZZ YT*",
+buttonText: `${res.meta.pagination.count} Users`,
+sections
+}, { quoted: msg })
+}
+break
+
+case 'detusr':{
+if (!isOwner) return reply(mess.owner)
+if (!q) return reply(`Ex : ${prefix+command} userId\n\nContoh :\n${prefix+command} 1`)
+let f = await fetch(host + "/api/application/users/" + q, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let res = await f.json()
+if (res.errors) return reply('*USER NOT FOUND*')
+reply(`*${res.attributes.username.toUpperCase()}USER DETAILS*\n\n*🔢 ID/External ID:* ${res.attributes.id}/${res.attributes.external_id}\n*😏 Username:* ${res.attributes.username}\n*📧 Email:* ${res.attributes.email}\n*🗣️ First name/Last Name:* ${res.attributes.first_name}/${res.attributes.last_name}\n*🇺🇸 Language:* ${res.attributes.language}\n*🎟️ Is Admin? ${res.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${res.attributes["2fa"]}*\n*📆 Created At:* ${res.attributes.created_at}\n*🆙 Updated At:* ${res.attributes.updated_at}\n*🗂️ UUID:* ${res.attributes.uuid}`)
+}
+break
+
+case 'addsrv':{
+if (!isOwner) return reply(mess.owner)
+let s = q.split(',')
+let name = s[0]
+let userId = s[1]
+let eggId = s[2]
+let locId = s[3]
+let memo_disk = s[4].split`/`
+let cpu = s[5]
+if (!name) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!userId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!eggId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!locId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!memo_disk[0]) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!memo_disk[1]) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+if (!cpu) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+let f1 = await fetch(host + "/api/application/nests/5/eggs/" + eggId, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let data = await f1.json();
+let eggs = data.attributes
+
+let f = await fetch(host + "/api/application/servers", {
+"method": "POST",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key,
+},
+"body": JSON.stringify({
+"name": name,
+"description": "",
+"user": parseInt(userId),
+"egg": parseInt(eggId),
+"docker_image": eggs.docker_image,
+"startup": eggs.startup,
+"environment": {
+"STARTUP_CMD": "npm install",
+"SECOND_CMD": "npm start"
+},
+"limits": {
+"memory": memo_disk[0],
+"swap": 0,
+"disk": memo_disk[1],
+"io": 500,
+"cpu": cpu
+},
+"feature_limits": {
+"databases": 1,
+"backups": 1,
+"allocations": 0
+},
+// "allocation": {
+//     "default": 36
+// }
+deploy: {
+locations: [parseInt(locId)],
+dedicated_ip: false,
+port_range: [],
+},
+})
+})
+let res = await f.json()
+if (res.errors) return reply(JSON.stringify(res.errors[0], null, 2))
+reply(`*SUCCESSFULLY ADD SERVER*\n\nTYPE: server\n\n*Name :* ${res.attributes.name}\n*ID :* ${res.attributes.id}\n*Identifier :* ${res.attributes.identifier}\n*UUID :* ${res.attributes.uuid}\n*RAM :* ${res.attributes.limits.memory === 0 ? 'UNLIMITED' : res.attributes.limits.memory} MB\n*DISK :* ${res.attributes.limits.disk === 0 ? 'UNLIMITED' : res.attributes.limits.disk} MB\n*CPU :* ${res.attributes.limits.cpu === 0 ? 'UNLIMITED' : res.attributes.limits.cpu}%\n*Created At :* ${res.attributes.created_at}`)
 }).catch(() => reply(mess.errorApi))
 }
 break
 
-case 'deluser':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
-const userN = await Application.getUserByUsername(q)
-Application.deleteUser(userN.attributes.id).then((x) => {
-reply('*SUKSES DELETE USER*')
-}).catch(() => reply('Username invalid atau tidak ada!'))
-}
-break
-
-case 'alluser':{
-if (!isOwner) return reply(mess.owner)
-Application.getAllUsers().then((x) => {
-let num = 0;
-let teks = `*〔 All Users 〕*\n\n`;
-for (let i of x.data) {
-let y = i.attributes;
-num += 1;
-teks += `*${num}. ${y.username}*\n• Identifier: ${y.id}\n• UUID: ${y.uuid}\n• Email: ${y.email}\n• First Name/Last Name: ${y.first_name}/${y.last_name}\n• Created At: ${y.created_at}\n• ${host}/admin/users/view/${y.id}\n\n`;
-}
-reply(teks);
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'getuserdetail':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} username\n\nContoh :\n${prefix+command} ronzzyt22`)
-Application.getUserByUsername(q).then((y) => {
-reply(`*USER DETAIL*\n\n*🔢 ID/External ID:* ${y.attributes.id}/${y.attributes.external_id}\n*😏 Username:* ${y.attributes.username}\n*📧 Email:* ${y.attributes.email}\n*🗣️ First name/Last Name:* ${y.attributes.first_name}/${y.attributes.last_name}\n*🇺🇸 Language:* ${y.attributes.language}\n*🎟️ Is Admin? ${y.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${y.attributes["2fa"]}*\n*📆 Created At:* ${y.attributes.created_at}\n*🆙 Updated At:* ${y.attributes.updated_at}\n*🗂️ UUID:* ${y.attributes.uuid}`)
-}).catch(() => reply('Username invalid atau tidak ada!'))
-}
-break
-
-case 'addserver':{
-if (!isOwner) return reply(mess.owner)
-let name = q.split('|')[0] ? q.split('|')[0]: q
-let usernameNya = q.split('|')[1] ? q.split('|')[1]: ''
-let memory = q.split('|')[2] ? q.split('|')[2]: ''
-let disk = q.split('|')[3] ? q.split('|')[3]: ''
-let cpu = q.split('|')[4] ? q.split('|')[4]: ''
-if (!name) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} Example|ronzzyt22|1024|10240|100`)
-if (!usernameNya) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|ronzzyt22|1024|10240|100`)
-if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|1024|10240|100`)
-if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|10240|100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|${disk}|100`)
-const userNya = await Application.getUserByUsername(usernameNya)
-let A = {
-name: name,
-user: userNya.attributes.id,
-nest: Number(serverCreate.nestId)
-egg: Number(serverCreate.eggId),
-docker_image: 'quay.io/yajtpg/pterodactyl-images:nodejs-19',
-startup: '/start.sh',
-environment: serverCreate.eggs.environment,
-limits: {
-memory: Number(memory),
-swap: 0,
-disk: Number(disk),
-io: 500,
-cpu: Number(cpu),
-},
-feature_limits: {
-databases: serverCreate.limits.db,
-backups: serverCreate.limits.backups,
-allocations: serverCreate.limits.allocations,
-},
-allocation: {
-default: 1,
-}
-}
-axios({
-url: `${host}/api/application/servers`,
-method: 'post',
-followRedirect: true,
-maxRedirects: 5,
-headers: {
-'Authorization': `Bearer ${application.api_key}`,
-'Content-Type': 'application/json',
-'Accept': 'Application/vnd.pterodactyl.v1+json',
-},
-data: A
-}).then((x) => {
-reply(`*SUKSES ADD SERVER*\n\n*Name :* ${x.attributes.name}\n*ID :* ${x.attributes.id}\n*Identifier :* ${x.attributes.identifier}\n*UUID :* ${x.attributes.uuid}\n*RAM :* ${x.attributes..limits.memory}\n*DISK :* ${x.attributes.limits.disk}\n*CPU :* ${x.attributes.limits.cpu}%\n*Created At :* ${x.attributes.created_at}`)
-}).catch(() => reply(mess.errorApi))
-}
-break
-
-case 'delserver':{
+case 'delsrv':{
 if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.deleteServer(Number(q)).then((x) => {
-reply('*SUKSES DELETE SERVER*')
-}).catch(() => reply('Server id invalid atau tidak ada!'))
+await fetch(host + "/api/application/servers/" + srv, {
+"method": "DELETE",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key,
+}
+})
+let res = f.ok ? {
+errors: null
+} : await f.json()
+if (res.errors) return reply('*SERVER NOT FOUND*')
+reply('*SUCCESSFULLY DELETE THE SERVER*')
 }
 break
 
-case 'susserver':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.suspendServer(Number(q)).then((x) => {
-reply('*SUKSES SUSPEND SERVER*')
-}).catch(() => reply('Server id invalid atau tidak ada!'))
+case 'listsrv': {
+let page = q ? q : '1'
+let f = await fetch(host + "/api/application/servers?page=" + page, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let res = await f.json();
+let servers = res.data
+let sections = []
+for (let server of servers) {
+let s = server.attributes
+let f3 = await fetch(host + "/api/client/servers/" + s.uuid.split`-`[0] + "/resources", {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.c_api_key
+}
+})
+let data = await f3.json();
+let obj = {
+title: "-- RONZZ YT --",
+rows: [
+{ title: `${s.id}. ${s.name}`, rowId: `${prefix}detsrv ` + s.id, description: `Status: ${data.attributes ? data.attributes.current_state : s.status}` },
+
+]
+}
+await sections.push(obj)
+if (sections.length >= 50 && res.meta.pagination.links.next) {
+sections.push({
+title: "-- RONZZ YT --",
+rows: [
+{ title: `⏩ NEXT`, rowId: `${prefix}listsrv 2`, description: 'Page 2' },
+]
+})
+}
+}
+await ronzz.sendMessage(from, {
+text: "Berikut list server *RONZZ YT*",
+footer: `Page: ${res.meta.pagination.current_page}/${res.meta.pagination.total_pages}`,
+title: "*RONZZ YT*",
+buttonText: `${res.meta.pagination.count} Servers`,
+sections
+}, { quoted: msg })
 }
 break
 
-case 'unsusserver':{
-if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-Application.unsuspendServer(Number(q)).then((x) => {
-reply('*SUKSES UNSUSPEND SERVER*')
-}).catch(() => reply('Server id invalid atau tidak ada!'))
+case 'detsrv': {
+if (!q) return reply(`Ex : ${prefix+command} serverId\n\nContoh :\n${prefix+command} 1`)
+let f = await fetch(host + "/api/application/servers/" + q, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + apikey
 }
-break
-
-case 'allserver':{
-if (!isOwner) return reply(mess.owner)
-Application.getAllServers().then((x) => {
-let num = 0;
-let teks = `*〔 All Servers 〕*\n\n`;
-for (let i of x.data) {
-let y = i.attributes;
-num += 1;
-teks += `*${num}. ${y.name}*\n• ID: ${y.id}\n• Identifier: ${y.identifier}\n• UUID: ${y.uuid}\n• RAM: ${y.limits.memory}\n• Database: ${y.feature_limits.databases}\n• Allocations: ${y.feature_limits.allocations}\n• Node: ${y.node}\n\n`;
+})
+let res = await f.json();
+if (res.errors) return m.reply('*SERVER NOT FOUND*')
+let s = res.attributes
+let f2 = await fetch(host + "/api/client/servers/" + s.uuid.split`-`[0] + "/resources", {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.c_api_key
 }
-reply(teks);
-}).catch(() => reply(mess.errorApi))
+})
+let data = await f2.json();
+let t = data.attributes
+reply(`*${s.name.toUpperCase()} SERVER DETAILS*\n\nSTATUS: ${t.current_state}\n\nID: ${s.id}\nUUID: ${s.uuid}\nNAME: ${s.name}\nDESCRIPTION: ${s.description}\nMEMORY: ${await (format(t.resources.memory_bytes)).toString()} / ${s.limits.memory === 0 ? 'UNLIMITED' : s.limits.memory + 'MB'}\nDISK: ${await (format(t.resources.disk_bytes)).toString()} / ${s.limits.disk === 0 ? 'UNLIMITED' : s.limits.disk + 'MB'}\nCPU: ${t.resources.cpu_absolute}% / ${s.limits.cpu === 0 ? 'UNLIMITED' : s.limits.cpu + '%'}\nCREATED AT: ${s.created_at}`)
 }
 break
 

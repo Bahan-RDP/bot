@@ -62,7 +62,8 @@ const payment = {
 //Manage panel
 const host = "https://panel.ronzxapis.my.id"
 const application = {
-    api_key: "ptla_2IqHux2YW2uvgP23pP5EkqhRqTN26PqZTwmhjyuKCuZ"
+    api_key: "ptla_gYgyEMOsNipQy9dVe3lYTEidKrKD4u64H96i3x3TWri",
+    c_api_key: "ptlc_Pohf274qrfd12XVvLaGPMCxx8R6tGat7MI3Q8sH3wvP"
 }
 const serverCreate = {
     nestId: "5",
