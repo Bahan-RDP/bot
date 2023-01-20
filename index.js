@@ -4939,25 +4939,10 @@ if (!memory) return reply(`Ex : ${prefix+command} name}|username|memory|disk|cpu
 if (!disk) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|10240|100`)
 if (!cpu) return reply(`Ex : ${prefix+command} name|username|memory|disk|cpu\n\nContoh :\n${prefix+command} ${name}|${usernameNya}|${memory}|${disk}|100`)
 const userNya = await Application.getUserByUsername(usernameNya)
-const serverBuilder = Nodeactyl.ServerBuilder
-let server = new serverBuilder()
-.setServerName(name)
-.setServerOwner(userNya.attributes.id)
-.setServerEgg(Number(serverCreate.eggId))
-.setServerDockerImage("quay.io/yajtpg/pterodactyl-images:nodejs-19")
-.setServerStartup("/start.sh")
-.setServerLimitsJson({'memory': Number(memory), 'swap': 0, 'disk': Number(disk), 'io': 500, 'cpu': Number(cpu)})
-.setServerDatabaseLimit(serverCreate.limits.db)
-.setServerAllocationLimit(serverCreate.limits.allocations)
-.setServerBackupLimit(serverCreate.limits.backups)
-.setServerEnvironmentJson(serverCreate.eggs.environment)
-.setServerDefaultAllocation(1)
-.createServer(Application).then((x) => {
-reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
-}).catch(() => reply(mess.errorApi))
-/*let A = {
+let A = {
 name: name,
-user: Number(user),
+user: userNya.attributes.id,
+nest: Number(serverCreate.nestId)
 egg: Number(serverCreate.eggId),
 docker_image: 'quay.io/yajtpg/pterodactyl-images:nodejs-19',
 startup: '/start.sh',
@@ -4978,22 +4963,20 @@ allocation: {
 default: 1,
 }
 }
-fetch(`${host}/api/application/servers`, {
-method: "POST",
+axios({
+url: `${host}/api/application/servers`,
+method: 'post',
 followRedirect: true,
 maxRedirects: 5,
 headers: {
-Authorization: "Bearer "+application.api_key,
-"Content-Type": "application/json",
-Accept: "Application/vnd.pterodactyl.v1+json",
+'Authorization': `Bearer ${application.api_key}`,
+'Content-Type': 'application/json',
+'Accept': 'Application/vnd.pterodactyl.v1+json',
 },
-body: JSON.stringify(A),
-})
-.then((d) => d.json())
-.then((x) => {
-reply(`*SUKSES ADD SERVER*\n\n*IDENTIFIER :*\n${x.attributes.identifier}*`)
+data: A
+}).then((x) => {
+reply(`*SUKSES ADD SERVER*\n\n*Name :* ${x.attributes.name}\n*ID :* ${x.attributes.id}\n*Identifier :* ${x.attributes.identifier}\n*UUID :* ${x.attributes.uuid}\n*RAM :* ${x.attributes..limits.memory}\n*DISK :* ${x.attributes.limits.disk}\n*CPU :* ${x.attributes.limits.cpu}%\n*Created At :* ${x.attributes.created_at}`)
 }).catch(() => reply(mess.errorApi))
-*/
 }
 break
 
