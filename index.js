@@ -4940,7 +4940,7 @@ let u = user.attributes
 let obj = {
 title: "-- RONZZ YT --",
 rows: [
-{ title: `${u.id}. ${u.username}`, rowId: `${prefix}detusr ` + u.username, description: u.first_name + ' ' + u.last_name },
+{ title: `${u.id}. ${u.username}`, rowId: `${prefix}detusr ` + u.id, description: u.first_name + ' ' + u.last_name },
 ]
 }
 await sections.push(obj)
@@ -4987,15 +4987,16 @@ let name = s[0]
 let userId = s[1]
 let eggId = s[2]
 let locId = s[3]
-let memo_disk = s[4].split`/`
-let cpu = s[5]
-if (!name) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!userId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!eggId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!locId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!memo_disk[0]) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!memo_disk[1]) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory/disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024/10240,100`)
+let memory = s[4]
+let disk = s[5]
+let cpu = s[6]
+if (!name) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!userId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!eggId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!locId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!memory) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!disk) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!cpu) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
 let f1 = await fetch(host + "/api/application/nests/5/eggs/" + eggId, {
 "method": "GET",
 "headers": {
@@ -5026,9 +5027,9 @@ let f = await fetch(host + "/api/application/servers", {
 "SECOND_CMD": "npm start"
 },
 "limits": {
-"memory": memo_disk[0],
+"memory": memory,
 "swap": 0,
-"disk": memo_disk[1],
+"disk": disk,
 "io": 500,
 "cpu": cpu
 },
@@ -5050,7 +5051,6 @@ port_range: [],
 let res = await f.json()
 if (res.errors) return reply(JSON.stringify(res.errors[0], null, 2))
 reply(`*SUCCESSFULLY ADD SERVER*\n\nTYPE: server\n\n*Name :* ${res.attributes.name}\n*ID :* ${res.attributes.id}\n*Identifier :* ${res.attributes.identifier}\n*UUID :* ${res.attributes.uuid}\n*RAM :* ${res.attributes.limits.memory === 0 ? 'UNLIMITED' : res.attributes.limits.memory} MB\n*DISK :* ${res.attributes.limits.disk === 0 ? 'UNLIMITED' : res.attributes.limits.disk} MB\n*CPU :* ${res.attributes.limits.cpu === 0 ? 'UNLIMITED' : res.attributes.limits.cpu}%\n*Created At :* ${res.attributes.created_at}`)
-}).catch(() => reply(mess.errorApi))
 }
 break
 
