@@ -19,6 +19,8 @@ const os = require('os');
 const fetch = require('node-fetch');
 const similarity = require('similarity');
 const threshold = 0.72
+const { sizeFormatter } = require('human-readable');
+const format = sizeFormatter()
 
 // Database
 let antilink = JSON.parse(fs.readFileSync('./database/bot/antilink.json'));
@@ -4871,12 +4873,13 @@ break
 
 case 'addusr':{
 if (!isOwner) return reply(mess.owner)
-let email = q.split('|')[0] ? q.split('|')[0]: q
-let username = q.split('|')[1] ? q.split('|')[1]: ''
-let nomor = q.split('|')[2] ? q.split('|')[2]: ''
-if (!email) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com|example|@user`)
-if (!username) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|example|@user`)
-if (!nomor) return reply(`Ex : ${prefix+command} Email|Username|@tag/nomor\n\nContoh :\n${prefix+command} ${email}|${username}|@user`)
+let s = q.split(',')
+let email = s[0]
+let username = s[1]
+let nomor = s[2]
+if (!email) return reply(`Ex : ${prefix+command} Email,Username,@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com,example,@user`)
+if (!username) return reply(`Ex : ${prefix+command} Email,Username,@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com,example,@user`)
+if (!nomor) return reply(`Ex : ${prefix+command} Email,Username,@tag/nomor\n\nContoh :\n${prefix+command} example@gmail.com,example,@user`)
 let psswd = require("crypto").randomBytes(10).toString("hex").toUpperCase()
 let nomornya = nomor.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 let f = await fetch(host + "/api/application/users", {
@@ -4897,8 +4900,8 @@ let f = await fetch(host + "/api/application/users", {
 })
 let res = await f.json();
 if (res.errors) return reply(JSON.stringify(res.errors[0], null, 2));
-ronzz.sendMessage(from, { text: `*SUCCESSFULLY ADD USER*\n\nTYPE: user\n\n*ID :* ${res.attributes.id}\n*UUID :* ${res.attributes. uuid}\n*Username :* ${res.attributes.username}\n*Email :* ${res.attributes.email}\n*First Name/Last Name :* ${res.attributes.first_name}/${res.attributes.last_name}\n*Created At :* ${res.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
-ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID :* ${res.attributes.id}\n*UUID :* ${res.attributes. uuid}\n*Username :* ${res.attributes.username}\n*Email :* ${res.attributes.email}\n*First Name/Last Name :* ${res.attributes.first_name}/${res.attributes.last_name}\n*Created At :* ${res.attributes.created_at}\n*Password :* ${psswd}\n*Login :* ${host}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
+ronzz.sendMessage(from, { text: `*SUCCESSFULLY ADD USER*\n\n*TYPE:* user\n\n*ID:* ${res.attributes.id}\n*UUID:* ${res.attributes. uuid}\n*USERNAME:* ${res.attributes.username}\n*EMAIL:* ${res.attributes.email}\n*FIRST NAME/LAST NAME:* ${res.attributes.first_name}/${res.attributes.last_name}\n*CREATED AT:* ${res.attributes.created_at}\n\n*Password telah dikirim ke @${nomornya.split('@')[0]}*`, mentions: [nomornya]}, { quoted: msg })
+ronzz.sendMessage(nomornya, { text: `*DONE PANEL BY RONZZ YT*\n\n*ID:* ${res.attributes.id}\n*UUID:* ${res.attributes. uuid}\n*USERNAME:* ${res.attributes.username}\n*EMAIL:* ${res.attributes.email}\n*FIRST NAME/LAST NAME:* ${res.attributes.first_name}/${res.attributes.last_name}\n*CREATED AT:* ${res.attributes.created_at}\n*PASSWORD:* ${psswd}\n*LOGIN:* ${host}\n\n*NOTE*\n_*Bot* atau *Ronzz YT* tidak akan mengirim kedua kali,_\n_Jadi simpan baik baik atau di ingat._\n\n#TERIMAKASIH` })
 }
 break
 
@@ -4976,7 +4979,7 @@ let f = await fetch(host + "/api/application/users/" + q, {
 })
 let res = await f.json()
 if (res.errors) return reply('*USER NOT FOUND*')
-reply(`*${res.attributes.username.toUpperCase()}USER DETAILS*\n\n*🔢 ID/External ID:* ${res.attributes.id}/${res.attributes.external_id}\n*😏 Username:* ${res.attributes.username}\n*📧 Email:* ${res.attributes.email}\n*🗣️ First name/Last Name:* ${res.attributes.first_name}/${res.attributes.last_name}\n*🇺🇸 Language:* ${res.attributes.language}\n*🎟️ Is Admin? ${res.attributes.root_admin}*\n*🦺 Is 2FA enabled? ${res.attributes["2fa"]}*\n*📆 Created At:* ${res.attributes.created_at}\n*🆙 Updated At:* ${res.attributes.updated_at}\n*🗂️ UUID:* ${res.attributes.uuid}`)
+reply(`*${res.attributes.username.toUpperCase()} USER DETAILS*\n\n*ID:* ${res.attributes.id}\n*USERNAME:* ${res.attributes.username}\n*EMAIL:* ${res.attributes.email}\n*FIRST NAME/LAST NAME:* ${res.attributes.first_name}/${res.attributes.last_name}\n*LANGUAGE:* ${res.attributes.language}\n*IS ADMIN:* ${res.attributes.root_admin}\n*IS 2FA:* ${res.attributes["2fa"]}\n*CREATED AT:* ${res.attributes.created_at}\n*UPDATE AT:* ${res.attributes.updated_at}\n*UUID:* ${res.attributes.uuid}`)
 }
 break
 
@@ -4990,13 +4993,13 @@ let locId = s[3]
 let memory = s[4]
 let disk = s[5]
 let cpu = s[6]
-if (!name) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!userId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!eggId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!locId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!memory) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!disk) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
-if (!cpu) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,memory,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!name) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!userId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!eggId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!locId) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!memory) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!disk) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
+if (!cpu) return reply(`Ex : ${prefix+command} name,userId,eggId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} Example,1,15,1,1024,10240,100`)
 let f1 = await fetch(host + "/api/application/nests/5/eggs/" + eggId, {
 "method": "GET",
 "headers": {
@@ -5050,14 +5053,14 @@ port_range: [],
 })
 let res = await f.json()
 if (res.errors) return reply(JSON.stringify(res.errors[0], null, 2))
-reply(`*SUCCESSFULLY ADD SERVER*\n\nTYPE: server\n\n*Name :* ${res.attributes.name}\n*ID :* ${res.attributes.id}\n*Identifier :* ${res.attributes.identifier}\n*UUID :* ${res.attributes.uuid}\n*RAM :* ${res.attributes.limits.memory === 0 ? 'UNLIMITED' : res.attributes.limits.memory} MB\n*DISK :* ${res.attributes.limits.disk === 0 ? 'UNLIMITED' : res.attributes.limits.disk} MB\n*CPU :* ${res.attributes.limits.cpu === 0 ? 'UNLIMITED' : res.attributes.limits.cpu}%\n*Created At :* ${res.attributes.created_at}`)
+reply(`*SUCCESSFULLY ADD SERVER*\n\n*TYPE: server*\n\n*NAME:* ${res.attributes.name}\n*ID:* ${res.attributes.id}\n*IDENTIFIER:* ${res.attributes.identifier}\n*UUID:* ${res.attributes.uuid}\n*RAM:* ${res.attributes.limits.memory === 0 ? 'UNLIMITED' : res.attributes.limits.memory} MB\n*DISK:* ${res.attributes.limits.disk === 0 ? 'UNLIMITED' : res.attributes.limits.disk} MB\n*CPU:* ${res.attributes.limits.cpu === 0 ? 'UNLIMITED' : res.attributes.limits.cpu}%\n*CREATED AT:* ${res.attributes.created_at}`)
 }
 break
 
 case 'delsrv':{
 if (!isOwner) return reply(mess.owner)
-if (!q) return reply(`Ex : ${prefix+command} server id\n\nContoh :\n${prefix+command} 9`)
-await fetch(host + "/api/application/servers/" + srv, {
+if (!q) return reply(`Ex : ${prefix+command} serverId\n\nContoh :\n${prefix+command} 9`)
+let f = await fetch(host + "/api/application/servers/" + q, {
 "method": "DELETE",
 "headers": {
 "Accept": "application/json",
@@ -5074,6 +5077,7 @@ reply('*SUCCESSFULLY DELETE THE SERVER*')
 break
 
 case 'listsrv': {
+if (!isOwner) return reply(mess.owner)
 let page = q ? q : '1'
 let f = await fetch(host + "/api/application/servers?page=" + page, {
 "method": "GET",
@@ -5125,17 +5129,18 @@ sections
 break
 
 case 'detsrv': {
+if (!isOwner) return reply(mess.owner)
 if (!q) return reply(`Ex : ${prefix+command} serverId\n\nContoh :\n${prefix+command} 1`)
 let f = await fetch(host + "/api/application/servers/" + q, {
 "method": "GET",
 "headers": {
 "Accept": "application/json",
 "Content-Type": "application/json",
-"Authorization": "Bearer " + apikey
+"Authorization": "Bearer " + application.api_key
 }
 })
 let res = await f.json();
-if (res.errors) return m.reply('*SERVER NOT FOUND*')
+if (res.errors) return reply('*SERVER NOT FOUND*')
 let s = res.attributes
 let f2 = await fetch(host + "/api/client/servers/" + s.uuid.split`-`[0] + "/resources", {
 "method": "GET",
@@ -5147,7 +5152,59 @@ let f2 = await fetch(host + "/api/client/servers/" + s.uuid.split`-`[0] + "/reso
 })
 let data = await f2.json();
 let t = data.attributes
-reply(`*${s.name.toUpperCase()} SERVER DETAILS*\n\nSTATUS: ${t.current_state}\n\nID: ${s.id}\nUUID: ${s.uuid}\nNAME: ${s.name}\nDESCRIPTION: ${s.description}\nMEMORY: ${await (format(t.resources.memory_bytes)).toString()} / ${s.limits.memory === 0 ? 'UNLIMITED' : s.limits.memory + 'MB'}\nDISK: ${await (format(t.resources.disk_bytes)).toString()} / ${s.limits.disk === 0 ? 'UNLIMITED' : s.limits.disk + 'MB'}\nCPU: ${t.resources.cpu_absolute}% / ${s.limits.cpu === 0 ? 'UNLIMITED' : s.limits.cpu + '%'}\nCREATED AT: ${s.created_at}`)
+reply(`*${s.name.toUpperCase()} SERVER DETAILS*\n\n*STATUS:* ${t.current_state}\n\n*ID:* ${s.id}\n*UUID:* ${s.uuid}\n*NAME:* ${s.name}\n*DESCRIPTION:* ${s.description}\n*RAM:* ${await (format(t.resources.memory_bytes)).toString()} / ${s.limits.memory === 0 ? 'UNLIMITED' : s.limits.memory + 'MB'}\n*DISK:* ${await (format(t.resources.disk_bytes)).toString()} / ${s.limits.disk === 0 ? 'UNLIMITED' : s.limits.disk + 'MB'}\n*CPU:* ${t.resources.cpu_absolute}% / ${s.limits.cpu === 0 ? 'UNLIMITED' : s.limits.cpu + '%'}\n*CREATED AT:* ${s.created_at}\n*UPDATED AT:* ${server.updated_at}`)
+}
+break
+
+case 'updatesrv':{
+if (!isOwner) return reply(mess.owner)
+let s = q.split(',')
+let serverId = s[0]
+let locId = s[1]
+let memory = s[2]
+let disk = s[3]
+let cpu = s[4]
+if (!serverId) return reply(`Ex : ${prefix+command} serverId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} 1,1,1024,10240,100`)
+if (!locId) return reply(`Ex : ${prefix+command} serverId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} 1,1,1024,10240,100`)
+if (!memory) return reply(`Ex : ${prefix+command} serverId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} 1,1,1024,10240,100`)
+if (!disk) return reply(`Ex : ${prefix+command} serverId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} 1,1,1024,10240,100`)
+if (!cpu) return reply(`Ex : ${prefix+command} serverId,locationId,ram,disk,cpu\n\nContoh :\n${prefix+command} 1,1,1024,10240,100`)
+let f1 = await fetch(host + "/api/application/servers/" + serverId, {
+"method": "GET",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+}
+})
+let data = await f1.json()
+
+let f = await fetch(host + "/api/application/servers/" + serverId + "/build", {
+"method": "PATCH",
+"headers": {
+"Accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": "Bearer " + application.api_key
+},
+"body": JSON.stringify({
+"allocation": parseInt(locId) || data.attributes.allocation,
+"memory": memory || data.attributes.limits.memory,
+"swap": data.attributes.limits.swap || 0,
+"disk": disk || data.attributes.limits.disk,
+"io": 500,
+"cpu": cpu || data.attributes.limits.cpu,
+"threads": null,
+"feature_limits": {
+"databases": 1,
+"allocations": 0,
+"backups": 1
+}
+})
+})
+let res = await f.json()
+if (res.errors) return m.reply(JSON.stringify(res.errors[0], null, 2))
+let server = res.attributes
+reply(`*SUCCESSFULLY UPDATED THE SERVER*\n\n*TYPE:* ${res.object}\n\n*ID:* ${server.id}\n*UUID:* ${server.uuid}\n*NAME:* ${server.name}\n*DESCRIPTION:* ${server.description}\n*RAM:* ${server.limits.memory === 0 ? 'UNLIMITED' : server.limits.memory} MB\n*DISK:* ${server.limits.disk === 0 ? 'UNLIMITED' : server.limits.disk} MB\n*CPU:* ${server.limits.cpu === 0 ? 'UNLIMITED' : server.limits.cpu}%\n*CREATED AT:* ${server.created_at}\n*UPDATED AT:* ${server.updated_at}`)
 }
 break
 
